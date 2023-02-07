@@ -1,0 +1,14 @@
+// globsl styles
+.padding-bottom-safe-area {
+  @include padding-bottom-safe-area(0);
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#app {
+  font-size: 16px;
+}

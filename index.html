@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <!-- <title>Vite + Vue + TS</title> -->
+
+    <script>
+      (function () {
+        function setHtmlFontSize() {
+          const minWidth = 375; // 小于此大小，也按照此大小显示
+          const maxWidth = 500; // 超过这个大小按照PC端来显示
+          const pcWidth = 480; // PC 端显示大小计算尺寸
+          let clientWidth = document.documentElement.clientWidth;
+          clientWidth = clientWidth < minWidth ? minWidth : (clientWidth > maxWidth ? pcWidth : clientWidth);
+          document.documentElement.style.fontSize = `${clientWidth / 30}px`;
+        }
+        setHtmlFontSize();
+        window.addEventListener('resize', setHtmlFontSize);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
