@@ -10,10 +10,11 @@ export default class Observable {
     const instance: Instance = new this();
     if (state) {
       forEach(Object.getOwnPropertyDescriptors(state), (descriptor, key) => {
-        if ('value' in descriptor)
+        if ('value' in descriptor) {
           instance[key] = descriptor.value;
-        else
+        } else {
           Object.defineProperty(instance, key, descriptor);
+        }
       });
     }
     return reactive(instance);

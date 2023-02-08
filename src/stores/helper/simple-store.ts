@@ -27,8 +27,7 @@ export class SimpleStore extends Observable {
   }
 
   async fetching(params?: Object, isForce = false) {
-    if (!this.isFetching || isForce)
-      this.fetchPromies = this.fetch(params);
+    if (!this.isFetching || isForce) { this.fetchPromies = this.fetch(params); }
 
     this.isFetching = true;
     try {
@@ -39,8 +38,7 @@ export class SimpleStore extends Observable {
         isFulfilled: true,
       });
       return res;
-    }
-    catch (err) {
+    } catch (err) {
       Object.assign(this, {
         isFetching: false,
         isRejected: true,

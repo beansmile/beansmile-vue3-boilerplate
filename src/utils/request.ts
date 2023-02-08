@@ -14,8 +14,7 @@ const request = axios.create({
     },
   },
   transformRequest: [(data, headers: any) => {
-    if (!headers.Authorization)
-      headers.Authorization = authStore.access_token;
+    if (!headers.Authorization) { headers.Authorization = authStore.access_token; }
 
     return data;
   }],

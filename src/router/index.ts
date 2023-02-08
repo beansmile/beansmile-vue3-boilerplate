@@ -1,8 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
 
-// console.log(require('@/views/home.vue').default);
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -20,11 +18,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.VUE_APP_ROUTER_BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    if (savedPosition)
+    if (savedPosition) {
       return savedPosition;
-
-    else
+    } else {
       return { top: 0 };
+    }
   },
 });
 

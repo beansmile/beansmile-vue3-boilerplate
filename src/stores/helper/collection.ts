@@ -41,8 +41,7 @@ export class Collection extends SimpleStore {
   }
 
   async fetchMoreData() {
-    if (this.isFetching || this.isComplete)
-      return;
+    if (this.isFetching || this.isComplete) { return; }
 
     this.params.offset = this.data.length;
     const { data, meta } = await this.fetching(this.params);
@@ -66,13 +65,11 @@ export class Collection extends SimpleStore {
 
   removeItemById(id: number | string) {
     const index = this.data.findIndex((item: any) => Number(item.id) === Number(id));
-    if (index !== -1)
-      this.data.splice(index, 1);
+    if (index !== -1) { this.data.splice(index, 1); }
   }
 
   replaceItem(newItem: any) {
     const index = this.data.findIndex((item: any) => Number(item.id) === Number(newItem.id));
-    if (index > -1)
-      this.data.splice(index, 1, newItem);
+    if (index > -1) { this.data.splice(index, 1, newItem); }
   }
 }
