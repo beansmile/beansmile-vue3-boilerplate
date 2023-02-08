@@ -61,7 +61,7 @@ See [Configuration Reference](https://cn.vitejs.dev/guide/).
 │  ├── styles                # 公共样式和mixins样式
 │  ├── utils                 # 工具方法
 │  ├── app.vue               # 应用配置，用来配置App全局样式以及监听
-│  ├── main.js               # Vue初始化入口文件
+│  ├── main.ts               # Vue初始化入口文件
 ├── .env                     # 开发环境变量
 ├── .env.production          # 正式环境变量
 ├── .env.staging             # 测试环境变量
