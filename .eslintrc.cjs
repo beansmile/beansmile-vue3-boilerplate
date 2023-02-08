@@ -11,5 +11,12 @@ module.exports = {
       math: 'always',
     }],
     '@typescript-eslint/semi': [2, 'always'],
+    'vue/max-attributes-per-line': [1, {
+      singleline: 3,
+      multiline: 1,
+    }],
+    'curly': [2, 'all'],
+    '@typescript-eslint/brace-style': [2, '1tbs', { allowSingleLine: true }],
+    'max-statements-per-line': [2, { max: 2 }],
   },
 };

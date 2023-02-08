@@ -71,5 +71,5 @@ See [Configuration Reference](https://cn.vitejs.dev/guide/).
 ├── .gitlab-ci.yml           # ci配置
 ├── package.json             # 依赖包配置
 ├── postcss.config.cjs        # postcss配置
-└── vite.config.js            # vite 拓展配置
+└── vite.config.ts            # vite 拓展配置
 ```
