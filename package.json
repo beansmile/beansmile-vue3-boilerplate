@@ -1,8 +1,11 @@
 {
   "name": "vite-project",
-  "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {
+    "node": ">= 18.0.0"
+  },
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -12,7 +15,7 @@
     "deploy:production": "node ./scripts/deploy-h5.cjs --mode production",
     "preview": "vite preview",
     "preinstall": "only-allow pnpm",
-    "lint": "eslint \"**/*.{js,ts,vue}\"",
+    "lint": "eslint .",
     "lint:ts": "vue-tsc",
     "lint:style": "stylelint **/*.{scss,vue}"
   },
@@ -46,8 +49,5 @@
     "vite": "^4.1.0",
     "vite-plugin-checker": "^0.5.5",
     "vue-tsc": "^1.0.24"
-  },
-  "engines": {
-    "node": ">= 18.0.0"
   }
 }
