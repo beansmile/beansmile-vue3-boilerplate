@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
 ].filter(Boolean) as Array<RouteRecordRaw>;
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VUE_APP_ROUTER_BASE_URL),
+  history: createWebHistory(import.meta.env.VITE_APP_ROUTER_BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

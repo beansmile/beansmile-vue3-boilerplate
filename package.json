@@ -17,7 +17,7 @@
     "preinstall": "only-allow pnpm",
     "lint": "eslint .",
     "lint:ts": "vue-tsc",
-    "lint:style": "stylelint **/*.{scss,vue}"
+    "lint:style": "stylelint \"**/*.{scss,vue}\""
   },
   "dependencies": {
     "axios": "^1.3.2",
