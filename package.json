@@ -15,7 +15,7 @@
     "deploy:production": "node ./scripts/deploy-h5.cjs --mode production",
     "preview": "vite preview",
     "preinstall": "only-allow pnpm",
-    "lint": "eslint .",
+    "lint": "cross-env NODE_ENV=production eslint .",
     "lint:ts": "vue-tsc",
     "lint:style": "stylelint \"**/*.{scss,vue}\""
   },
@@ -33,6 +33,7 @@
     "@types/node": "^18.11.19",
     "@types/qs": "^6.9.7",
     "@vitejs/plugin-vue": "^4.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.33.0",
     "minimist": "^1.2.7",
     "node-deploy": "github:beansmile/node-deploy",

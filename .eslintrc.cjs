@@ -18,5 +18,6 @@ module.exports = {
     'curly': [2, 'all'],
     '@typescript-eslint/brace-style': [2, '1tbs', { allowSingleLine: true }],
     'max-statements-per-line': [2, { max: 2 }],
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
   },
 };
