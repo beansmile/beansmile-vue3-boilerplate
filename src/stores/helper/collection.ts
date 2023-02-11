@@ -1,15 +1,18 @@
-import { omit } from 'lodash-es';
 import { SimpleStore } from './simple-store';
 
-interface Options {
-  params: object
-  [key: string]: any
+interface Options<T> {
+  params?: {
+    offset?: number
+    perPage?: number
+    [key: string]: any
+  }
+  fetch: SimpleStore<T[]>['fetch']
 }
 
-export class Collection extends SimpleStore {
-  constructor(opts: Options = { params: {} }) {
+export class Collection<T> extends SimpleStore<T[]> {
+  constructor(opts: Options<T>) {
     super();
-    Object.assign(this, omit(opts, ['params']));
+    this.fetch = opts.fetch;
     this.params = Object.assign({}, this.defaultParams, opts.params);
   }
 
@@ -18,7 +21,7 @@ export class Collection extends SimpleStore {
     perPage: 50,
   };
 
-  data: any[] = [];
+  data: T[] = [];
   params = {
     offset: 0,
     perPage: 50,
@@ -35,18 +38,19 @@ export class Collection extends SimpleStore {
   }
 
   async fetchData(params?: Object, isForce = false) {
-    const { data, meta } = await this.fetching(params, isForce);
-    this.meta = meta;
-    this.data = data;
+    const res = await this.fetching(params, isForce);
+    this.meta = res.meta;
+    this.data = res.data || [];
+    return res;
   }
 
   async fetchMoreData() {
     if (this.isFetching || this.isComplete) { return; }
 
     this.params.offset = this.data.length;
-    const { data, meta } = await this.fetching(this.params);
+    const { data = [], meta } = await this.fetching(this.params);
     this.meta = meta;
-    this.data.push(...data as Array<Object>);
+    this.data.push(...data);
   }
 
   resetData() {
