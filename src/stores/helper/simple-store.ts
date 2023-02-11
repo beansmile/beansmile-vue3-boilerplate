@@ -1,20 +1,18 @@
-import Observable from './observable';
-
-interface Data {
-  data?: Object | Array<Object>
+interface Data<T> {
+  data: T
   mate?: Object
   [key: string]: any
 }
 
-export class SimpleStore extends Observable {
-  private fetchPromies: Promise<any> | null = null;
+export class SimpleStore<T = any> {
+  private fetchPromies: Promise<Data<T>> | null = null;
 
   isFetching = false;
   isRejected = false;
   isFulfilled = false;
 
   // fetch 需要自行定义好
-  fetch(params?: any): Promise<Data | void> {
+  fetch(params?: any): Promise<Data<T>> {
     return Promise.resolve(params);
   }
 
@@ -27,7 +25,10 @@ export class SimpleStore extends Observable {
   }
 
   async fetching(params?: Object, isForce = false) {
-    if (!this.isFetching || isForce) { this.fetchPromies = this.fetch(params); }
+    if (!this.isFetching || isForce || !this.fetchPromies) {
+      // 多次调用只发送一次请求，比如多接口 401 时，自动登录只调用一次
+      this.fetchPromies = this.fetch(params);
+    }
 
     this.isFetching = true;
     try {
@@ -44,6 +45,8 @@ export class SimpleStore extends Observable {
         isRejected: true,
       });
       throw err;
+    } finally {
+      this.fetchPromies = null;
     }
   }
 }
