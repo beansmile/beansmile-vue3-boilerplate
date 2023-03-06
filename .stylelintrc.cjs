@@ -3,6 +3,7 @@ module.exports = {
   extends: ['stylelint-config-standard-scss', 'stylelint-config-html'],
   plugins: ['stylelint-order'],
   rules: {
+    'color-function-notation': 'legacy',
     'selector-pseudo-class-no-unknown': [true, {
       ignorePseudoClasses: ['deep']
     }],
