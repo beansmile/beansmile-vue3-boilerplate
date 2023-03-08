@@ -2,11 +2,11 @@
 import { getCurrentInstance, ref, watchEffect } from 'vue';
 
 export interface IProps {
-  value: number
-  max: number
-  visible?: boolean
-  showMask?: boolean
-  delayed?: number // 最少loading的时间，可以防止加载太快，loading 闪烁问题
+  value: number;
+  max: number;
+  visible?: boolean;
+  showMask?: boolean;
+  delayed?: number; // 最少loading的时间，可以防止加载太快，loading 闪烁问题
 }
 
 const props = withDefaults(
@@ -67,7 +67,7 @@ defineExpose({
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(255, 255, 255 / 50%);
+    background-color: rgba(255, 255, 255, 50%);
     cursor: wait;
   }
 

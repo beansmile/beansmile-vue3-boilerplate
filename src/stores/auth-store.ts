@@ -6,8 +6,8 @@ import type { UserType } from '@/models/user';
 import { getUserDefaultData } from '@/models/user';
 
 export interface Body {
-  phone: string
-  password: string
+  phone: string;
+  password: string;
 }
 
 class AuthStore extends SimpleStore<{ access_token: string; user: UserType }> {

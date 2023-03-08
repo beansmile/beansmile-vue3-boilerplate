@@ -1,7 +1,7 @@
 interface Data<T> {
-  data: T
-  mate?: Object
-  [key: string]: any
+  data: T;
+  mate?: Object;
+  [key: string]: any;
 }
 
 export class SimpleStore<T = any> {

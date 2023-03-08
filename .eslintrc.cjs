@@ -19,5 +19,16 @@ module.exports = {
     '@typescript-eslint/brace-style': [2, '1tbs', { allowSingleLine: true }],
     'max-statements-per-line': [2, { max: 2 }],
     'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
+    '@typescript-eslint/member-delimiter-style': [2, {
+      multiline: {
+        delimiter: 'semi',
+        requireLast: true,
+      },
+      singleline: {
+        delimiter: 'semi',
+        requireLast: false,
+      },
+      multilineDetection: 'brackets',
+    }],
   },
 };
