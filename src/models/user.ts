@@ -2,7 +2,7 @@ import type { BaseType } from './base';
 import { getBaseData } from './base';
 
 export interface UserType extends BaseType {
-  phone: string
+  phone: string;
 }
 
 /**

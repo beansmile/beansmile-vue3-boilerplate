@@ -8,10 +8,10 @@ import LoadingComponent from '@/components/loading.vue';
 let instance: any;
 
 interface Options {
-  value?: number
-  max?: number
-  visible?: boolean
-  showMask?: boolean
+  value?: number;
+  max?: number;
+  visible?: boolean;
+  showMask?: boolean;
 }
 
 export default function createLoadingComponent(options: Options = {}) {

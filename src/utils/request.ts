@@ -8,9 +8,9 @@ import { authStore } from '@/stores';
 import router from '@/router';
 
 interface LoadingData {
-  maxCount: number
-  loadingInstance: any
-  loadingSet: Set<any>
+  maxCount: number;
+  loadingInstance: any;
+  loadingSet: Set<any>;
 }
 
 const loadingData: LoadingData = {

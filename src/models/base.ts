@@ -1,7 +1,7 @@
 export interface BaseType {
-  id: number
-  created_at: string
-  updated_at: string
+  id: number;
+  created_at: string;
+  updated_at: string;
 }
 
 //  通过 function 获取默认数据，防止引用类型数据，改到默认数据

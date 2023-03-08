@@ -2,11 +2,11 @@ import { SimpleStore } from './simple-store';
 
 interface Options<T> {
   params?: {
-    offset?: number
-    perPage?: number
-    [key: string]: any
-  }
-  fetch: SimpleStore<T[]>['fetch']
+    offset?: number;
+    perPage?: number;
+    [key: string]: any;
+  };
+  fetch: SimpleStore<T[]>['fetch'];
 }
 
 export class Collection<T> extends SimpleStore<T[]> {
