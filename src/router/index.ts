@@ -1,16 +1,18 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
+import HomeVue from '@/views/home.vue';
+import NotFound from '@/views/404.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'home',
-    component: () => import('@/views/home.vue'),
+    component: HomeVue,
   },
   {
     path: '/:pathMatch(.*)',
     name: '404',
-    component: () => import('@/views/404.vue'),
+    component: NotFound,
   },
 ].filter(Boolean) as Array<RouteRecordRaw>;
 
