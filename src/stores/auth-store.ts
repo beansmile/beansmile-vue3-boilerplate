@@ -1,45 +1,47 @@
-import { reactive } from 'vue';
-import { SimpleStore } from './helper/simple-store';
+import { computed } from 'vue';
+import { type Params, defineSimpleStore } from './helper/simple-store';
 import { request } from '@/utils';
-import { ACCESS_TOKEN_KEY } from '@/constants';
+import { STORAGE_KEYS } from '@/constants';
 import type { UserType } from '@/models/user';
 import { getUserDefaultData } from '@/models/user';
 
-export interface Body {
-  phone: string;
+export interface LoginBody {
+  email: string;
   password: string;
 }
 
-class AuthStore extends SimpleStore<{ access_token: string; user: UserType }> {
-  user: UserType = getUserDefaultData();
-  $access_token = '';
+export const useAuthStore = defineSimpleStore('auth', getUserDefaultData, ({
+  fetch,
+  data,
+  resetData,
+}) => {
+  const access_token = computed({
+    get() {
+      return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN_KEY) || '';
+    },
+    set(v) {
+      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN_KEY, v);
+    },
+  });
 
-  set access_token(v: string) {
-    this.$access_token = v;
-    localStorage.setItem(ACCESS_TOKEN_KEY, v);
-  }
+  fetch.value = (params?: Params) => {
+    return request.get('mine', { params });
+  };
 
-  get access_token(): string {
-    this.$access_token = this.$access_token || localStorage.getItem(ACCESS_TOKEN_KEY) || '';
-    return this.$access_token;
-  }
-
-  fetch(body: Body) {
-    return request.post('sessions/login', body);
-  }
-
-  async login(body: Body) {
-    const { data } = await this.fetchData(body);
-    this.access_token = data.access_token;
-    this.user = data.user;
+  async function login(body: LoginBody) {
+    const { data: newData } = await request.post<{ access_token: string; user: UserType }>('sessions/login', body);
+    access_token.value = newData.access_token;
     return data;
   }
 
-  signOut() {
-    this.access_token = '';
-    this.user = getUserDefaultData();
-    this.isFulfilled = false;
+  function signOut() {
+    access_token.value = '';
+    resetData.value();
   }
-}
 
-export const authStore = reactive(new AuthStore());
+  return {
+    login,
+    signOut,
+    access_token,
+  };
+});
