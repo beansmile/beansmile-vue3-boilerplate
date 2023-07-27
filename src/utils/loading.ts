@@ -1,11 +1,18 @@
 import {
+  type ComponentPublicInstance,
   createApp,
   h,
   reactive,
 } from 'vue';
-import LoadingComponent from '@/components/loading.vue';
+import type { IProps } from '@/components/common/loading.vue';
+import LoadingComponent from '@/components/common/loading.vue';
 
-let instance: any;
+export interface LoadingInstance {
+  vm: ComponentPublicInstance;
+  data: IProps;
+}
+
+let instance: LoadingInstance;
 
 interface Options {
   value?: number;
@@ -19,7 +26,7 @@ export default function createLoadingComponent(options: Options = {}) {
     Object.assign(instance.data, { visible: true }, options);
     return instance;
   }
-  const data = reactive({
+  const data = reactive<IProps>({
     value: 1,
     max: 2,
     visible: true,

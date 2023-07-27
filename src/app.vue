@@ -1,18 +1,21 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import Footer from '@/components/footer.vue';
-import Header from '@/components/header.vue';
 
 onMounted(async () => {});
+const keepAliveRouteName: string[] = [];
 </script>
 
 <template>
   <div class="global-layout">
-    <Header />
+    <global-header />
     <main class="main">
-      <router-view :key="$route.fullPath" />
+      <router-view v-slot="{ Component }">
+        <keep-alive :include="keepAliveRouteName">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </main>
-    <Footer />
+    <global-footer />
   </div>
 </template>
 
