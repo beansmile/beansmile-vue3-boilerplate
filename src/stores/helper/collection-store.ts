@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue';
+import { omit } from 'lodash-es';
 import type { Params, SimpleStoreReturnType } from './simple-store';
-import { defineSimpleStore } from './simple-store';
+import { defineSimpleStore, useCheckStore } from './simple-store';
 import type { CustomAxiosResponse } from '@/models/request';
 import type { BaseType } from '@/models/base';
 
@@ -31,7 +32,7 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
   });
 
   fetchData.value = async function (fetchParams?: Partial<Params>, isForce = false) {
-    const res = await fetching.value(params, isForce);
+    const res = await fetching.value({ ...params, ...fetchParams }, isForce);
     meta.value = res.meta;
     data.value = res.data;
     return res;
@@ -40,9 +41,9 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
   const fetchMoreData = ref(async () => {
     if (isFetching.value || isComplete.value) { return; }
     params.value.offset = data.value.length;
-    const { data: newData, meta: newMeta } = await fetching.value(params);
-    meta.value = newMeta;
-    data.value.push(...newData);
+    const res = await fetching.value(params);
+    meta.value = res.meta;
+    data.value.push(...res.data);
   });
 
   const unshift = ref((item: T) => {
@@ -96,14 +97,16 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
 export type CollectionStoreReturnType<T extends BaseType> = ReturnType<typeof collectionStore<T>>;
 
 export function defineCollectionStore<Id extends string, T extends BaseType, SS>(name: Id, getDefaultData: () => T[], storeSetup: (stroe: CollectionStoreReturnType<T> & SimpleStoreReturnType<T[]>) => SS) {
+  // useCheckStore 需要在 defineSimpleStore 之前调用，才能确保错误堆栈正确
+  const checkStore = useCheckStore(name, defineCollectionStore);
+
   return defineSimpleStore(name, getDefaultData, (simpleStore) => {
     const store = collectionStore(simpleStore);
+    const newStore = storeSetup({ ...simpleStore, ...store });
+    checkStore(store, newStore as object);
     return {
       ...store,
-      ...storeSetup({
-        ...simpleStore,
-        ...store,
-      }),
+      ...(omit(newStore as object, Object.keys(store)) as SS),
     };
   });
 }
