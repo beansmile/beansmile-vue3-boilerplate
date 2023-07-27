@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import type { Ref } from 'vue';
-import { noop } from 'lodash-es';
+import { has, noop, omit } from 'lodash-es';
 import { defineStore } from 'pinia';
 import type { CustomAxiosResponse } from '@/models/request';
 
@@ -80,11 +80,38 @@ function simpleStore<T>(getDefaultData: () => T) {
 export type SimpleStoreReturnType<T> = ReturnType<typeof simpleStore<T>>;
 
 export function defineSimpleStore<Id extends string, T, SS>(name: Id, getDefaultData: () => T, storeSetup: (store: SimpleStoreReturnType<T>) => SS) {
+  // useCheckStore 需要在 defineStore 之前调用，才能确保错误堆栈正确
+  const checkStore = useCheckStore(name, defineSimpleStore);
+
   return defineStore(name, () => {
     const store = simpleStore(getDefaultData);
+    const newStore = storeSetup(store);
+    checkStore(store, newStore as object);
     return {
       ...store,
-      ...storeSetup(store),
+      ...(omit(newStore as object, Object.keys(store)) as SS),
     };
   });
+}
+
+export function useCheckStore(name: string, fn: Function) {
+  const error = new Error(name);
+  Error.captureStackTrace(error, fn);
+
+  return function (store: object, newStore: object) {
+    let errorMes = '';
+    Object.keys(store).forEach((key) => {
+      if (has(newStore, key)) {
+        errorMes += `\n There is already a "${key}" in "${fn.name}", please don't duplicate it in "${name}". \n if you want to change it, please use "${key}.value = " reassignment. \n`;
+      }
+    });
+
+    if (errorMes) {
+      error.message = errorMes;
+      // 异步报错，不要阻塞主进程
+      setTimeout(() => {
+        throw error;
+      }, 0);
+    }
+  };
 }
