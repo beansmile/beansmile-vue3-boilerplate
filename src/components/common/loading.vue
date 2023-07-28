@@ -20,7 +20,7 @@ const props = withDefaults(
   },
 );
 
-const visible = ref(false);
+const localVisible = ref(false);
 
 let timer: number;
 
@@ -29,10 +29,10 @@ watchEffect(() => {
   clearTimeout(timer);
   if (props.delayed && !value) {
     timer = window.setTimeout(() => {
-      visible.value = value;
+      localVisible.value = value;
     }, props.delayed);
   } else {
-    visible.value = value;
+    localVisible.value = value;
   }
 });
 
