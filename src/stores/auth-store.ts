@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { type Params, defineSimpleStore } from './helper/simple-store';
 import { request } from '@/utils';
 import { STORAGE_KEYS } from '@/constants';
@@ -15,11 +15,13 @@ export const useAuthStore = defineSimpleStore('auth', getUserDefaultData, ({
   data,
   resetData,
 }) => {
-  const access_token = computed({
+  const _accessToken = ref(localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN_KEY) || '');
+  const accessToken = computed({
     get() {
-      return localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN_KEY) || '';
+      return _accessToken.value;
     },
     set(v) {
+      _accessToken.value = v;
       localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN_KEY, v);
     },
   });
@@ -30,18 +32,18 @@ export const useAuthStore = defineSimpleStore('auth', getUserDefaultData, ({
 
   async function login(body: LoginBody) {
     const { data: newData } = await request.post<{ access_token: string; user: UserType }>('sessions/login', body);
-    access_token.value = newData.access_token;
+    accessToken.value = newData.access_token;
     return data;
   }
 
   function signOut() {
-    access_token.value = '';
+    accessToken.value = '';
     resetData.value();
   }
 
   return {
     login,
     signOut,
-    access_token,
+    accessToken,
   };
 });
