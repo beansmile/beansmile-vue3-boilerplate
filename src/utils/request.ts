@@ -34,7 +34,7 @@ const request = axios.create({
 request.interceptors.request.use((config) => {
   if (config.headers && !config.headers.Authorization) {
     const authStore = useAuthStore();
-    config.headers.Authorization = authStore.access_token;
+    config.headers.Authorization = authStore.accessToken;
   }
   handleLoadingStart(config);
   return config;
