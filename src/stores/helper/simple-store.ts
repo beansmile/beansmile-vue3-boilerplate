@@ -51,7 +51,7 @@ function simpleStore<T>(getDefaultData: () => T) {
   });
 
   const fetchData = ref((fetchParams?: Partial<Params>, isForce = false) => {
-    return fetching.value({ ...params, ...fetchParams }, isForce);
+    return fetching.value({ ...params.value, ...fetchParams }, isForce);
   });
 
   const tryFetchData = ref((fetchParams?: Partial<Params>) => {

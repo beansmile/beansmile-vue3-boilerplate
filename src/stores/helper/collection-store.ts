@@ -32,7 +32,7 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
   });
 
   fetchData.value = async function (fetchParams?: Partial<Params>, isForce = false) {
-    const res = await fetching.value({ ...params, ...fetchParams }, isForce);
+    const res = await fetching.value({ ...params.value, ...fetchParams }, isForce);
     meta.value = res.meta;
     data.value = res.data;
     return res;
@@ -41,7 +41,7 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
   const fetchMoreData = ref(async () => {
     if (isFetching.value || isComplete.value) { return; }
     params.value.offset = data.value.length;
-    const res = await fetching.value(params);
+    const res = await fetching.value(params.value);
     meta.value = res.meta;
     data.value.push(...res.data);
   });
