@@ -96,7 +96,7 @@ export function defineSimpleStore<Id extends string, T, SS>(name: Id, getDefault
 
 export function useCheckStore(name: string, fn: Function) {
   const error = new Error(name);
-  Error.captureStackTrace(error, fn);
+  Error.captureStackTrace && Error.captureStackTrace(error, fn);
 
   return function (store: object, newStore: object) {
     let errorMes = '';
