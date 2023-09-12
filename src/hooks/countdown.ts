@@ -37,7 +37,7 @@ function setStorageEndTime(options: CountDownOptions) {
 
   if (!endTime && !duration) {
     const error = new Error('endTime 和 duration 不能同时为空');
-    Error.captureStackTrace(error, useCountDown);
+    Error.captureStackTrace && Error.captureStackTrace(error, useCountDown);
     throw error;
   }
 
