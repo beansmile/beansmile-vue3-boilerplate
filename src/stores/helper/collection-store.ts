@@ -32,18 +32,27 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
   });
 
   fetchData.value = async function (fetchParams?: Partial<Params>, isForce = false) {
-    const res = await fetching.value({ ...params.value, ...fetchParams }, isForce);
-    meta.value = res.meta;
-    data.value = res.data;
+    params.value.offset = 0;
+    const res = await fetching.value({ ...params.value, ...fetchParams }, {
+      isForce,
+      onResponse: (res) => {
+        meta.value = res.meta;
+      },
+    });
     return res;
   };
 
   const fetchMoreData = ref(async () => {
     if (isFetching.value || isComplete.value) { return; }
     params.value.offset = data.value.length;
-    const res = await fetching.value(params.value);
-    meta.value = res.meta;
-    data.value.push(...res.data);
+    const res = await fetching.value(params.value, {
+      autoAssignData: false,
+      onResponse: (res) => {
+        meta.value = res.meta;
+        data.value.push(...res.data);
+      },
+    });
+    return res;
   });
 
   const unshift = ref((item: T) => {
