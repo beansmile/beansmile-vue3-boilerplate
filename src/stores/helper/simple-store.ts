@@ -16,6 +16,12 @@ export interface Params {
   [key: string]: any;
 }
 
+interface FetchingOptions<T> {
+  isForce?: boolean;
+  autoAssignData?: boolean;
+  onResponse?: (result: Data<T>) => void;
+}
+
 function simpleStore<T>(getDefaultData: () => T) {
   const isFetching = ref(false);
   const isRejected = ref(false);
@@ -27,7 +33,8 @@ function simpleStore<T>(getDefaultData: () => T) {
   const fetch = ref((fetchParams?: Partial<Params>): Promise<CustomAxiosResponse<T>> | Promise<Data<T>> => Promise.resolve({ data: data.value }));
 
   let fetchPromies: Promise<Data<T>> | null = null;
-  const fetching = ref(async (params?: Partial<Params>, isForce = false, onResponse: (result: Data<T>) => void = noop) => {
+  const fetching = ref(async (params?: Partial<Params>, options: FetchingOptions<T> = {}) => {
+    const { isForce = false, onResponse = noop, autoAssignData = true } = options;
     if (!isFetching.value || isForce || !fetchPromies) {
       // 多次调用只发送一次请求，比如多接口 401 时，自动登录只调用一次
       fetchPromies = fetch.value(params);
@@ -36,10 +43,12 @@ function simpleStore<T>(getDefaultData: () => T) {
     try {
       const res = await fetchPromies;
       onResponse(res);
+      if (autoAssignData) {
+        data.value = res.data;
+      }
       isFetching.value = false;
       isRejected.value = false;
       isFulfilled.value = true;
-      data.value = res.data;
       return res;
     } catch (err) {
       isFetching.value = false;
@@ -51,7 +60,7 @@ function simpleStore<T>(getDefaultData: () => T) {
   });
 
   const fetchData = ref((fetchParams?: Partial<Params>, isForce = false) => {
-    return fetching.value({ ...params.value, ...fetchParams }, isForce);
+    return fetching.value({ ...params.value, ...fetchParams }, { isForce });
   });
 
   const tryFetchData = ref((fetchParams?: Partial<Params>) => {
