@@ -2,6 +2,7 @@ import { ref } from 'vue';
 import type { Ref } from 'vue';
 import { has, noop, omit } from 'lodash-es';
 import { defineStore } from 'pinia';
+import type { AxiosRequestConfig } from 'axios';
 import type { CustomAxiosResponse } from '@/models/request';
 
 export interface Data<T> {
@@ -30,14 +31,14 @@ function simpleStore<T>(getDefaultData: () => T) {
   const params = ref<Params>({});
 
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const fetch = ref((fetchParams?: Partial<Params>): Promise<CustomAxiosResponse<T>> | Promise<Data<T>> => Promise.resolve({ data: data.value }));
+  const fetch = ref((fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T>): Promise<CustomAxiosResponse<T>> | Promise<Data<T>> => Promise.resolve({ data: data.value }));
 
   let fetchPromies: Promise<Data<T>> | null = null;
-  const fetching = ref(async (params?: Partial<Params>, options: FetchingOptions<T> = {}) => {
+  const fetching = ref(async (params?: Partial<Params>, options: FetchingOptions<T> = {}, axiosOptions?: AxiosRequestConfig) => {
     const { isForce = false, onResponse = noop, autoAssignData = true } = options;
     if (!isFetching.value || isForce || !fetchPromies) {
       // 多次调用只发送一次请求，比如多接口 401 时，自动登录只调用一次
-      fetchPromies = fetch.value(params);
+      fetchPromies = fetch.value(params, axiosOptions);
     }
     isFetching.value = true;
     try {
@@ -59,12 +60,16 @@ function simpleStore<T>(getDefaultData: () => T) {
     }
   });
 
-  const fetchData = ref((fetchParams?: Partial<Params>, isForce = false) => {
-    return fetching.value({ ...params.value, ...fetchParams }, { isForce });
+  const fetchData = ref((fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T>) => {
+    return fetching.value({ ...params.value, ...fetchParams }, {}, options);
   });
 
-  const tryFetchData = ref((fetchParams?: Partial<Params>) => {
-    return !isFulfilled.value ? fetchData.value(fetchParams) : Promise.resolve();
+  const forceFetchData = ref((fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T>) => {
+    return fetching.value({ ...params.value, ...fetchParams }, { isForce: true }, options);
+  });
+
+  const tryFetchData = ref((fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T>) => {
+    return !isFulfilled.value ? fetchData.value(fetchParams, options) : Promise.resolve();
   });
 
   const resetData = ref(() => {
@@ -76,6 +81,7 @@ function simpleStore<T>(getDefaultData: () => T) {
     data,
     params,
     isFetching,
+    forceFetchData,
     isRejected,
     isFulfilled,
     fetchData,

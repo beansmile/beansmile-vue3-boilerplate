@@ -26,8 +26,8 @@ export const useAuthStore = defineSimpleStore('auth', getUserDefaultData, ({
     },
   });
 
-  fetch.value = (params?: Params) => {
-    return request.get('mine', { params });
+  fetch.value = (params?: Params, options = {}) => {
+    return request.get('mine', { params, ...options });
   };
 
   async function login(body: LoginBody) {

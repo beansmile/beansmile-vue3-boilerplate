@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue';
 import { omit } from 'lodash-es';
+import type { AxiosRequestConfig } from 'axios';
 import type { Params, SimpleStoreReturnType } from './simple-store';
 import { defineSimpleStore, useCheckStore } from './simple-store';
 import type { CustomAxiosResponse } from '@/models/request';
@@ -15,6 +16,7 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
     isFetching,
     fetching,
     fetchData,
+    forceFetchData,
   } = simpleStore;
 
   params.value.offset = 0;
@@ -31,18 +33,28 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
     return isFulfilled.value && data.value.length === 0;
   });
 
-  fetchData.value = async function (fetchParams?: Partial<Params>, isForce = false) {
+  fetchData.value = async function (fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T[]>) {
     params.value.offset = 0;
     const res = await fetching.value({ ...params.value, ...fetchParams }, {
-      isForce,
       onResponse: (res) => {
         meta.value = res.meta;
       },
-    });
+    }, options);
     return res;
   };
 
-  const fetchMoreData = ref(async () => {
+  forceFetchData.value = async function (fetchParams?: Partial<Params>, options?: AxiosRequestConfig<T[]>) {
+    params.value.offset = 0;
+    const res = await fetching.value({ ...params.value, ...fetchParams }, {
+      isForce: true,
+      onResponse: (res) => {
+        meta.value = res.meta;
+      },
+    }, options);
+    return res;
+  };
+
+  const fetchMoreData = ref(async (options?: AxiosRequestConfig<T[]>) => {
     if (isFetching.value || isComplete.value) { return; }
     params.value.offset = data.value.length;
     const res = await fetching.value(params.value, {
@@ -51,7 +63,7 @@ function collectionStore<T extends BaseType>(simpleStore: SimpleStoreReturnType<
         meta.value = res.meta;
         data.value.push(...res.data);
       },
-    });
+    }, options);
     return res;
   });
 
