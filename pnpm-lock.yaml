@@ -12,7 +12,7 @@ specifiers:
   eslint: ^8.45.0
   lodash-es: ^4.17.21
   minimist: ^1.2.8
-  node-deploy: git+https://github.com/beansmile/node-deploy.git
+  node-deploy: git+https://git@github.com/beansmile/node-deploy.git
   only-allow: ^1.1.1
   pinia: ^2.1.6
   postcss-html: ^1.5.0
@@ -50,7 +50,7 @@ devDependencies:
   cross-env: 7.0.3
   eslint: 8.45.0
   minimist: 1.2.8
-  node-deploy: github.com/beansmile/node-deploy/4ef1532b6d576337a0560f447c19a85fd8eacab7
+  node-deploy: github.com/beansmile/node-deploy/8aa0f0699e5e57fd911675795fb5b817f5e5c4f6
   only-allow: 1.1.1
   postcss-html: 1.5.0
   postcss-px-to-viewport-8-plugin: 1.2.2
@@ -2258,6 +2258,7 @@ packages:
 
   /glob/7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
+    deprecated: Glob versions prior to v9 are no longer supported
     dependencies:
       fs.realpath: 1.0.0
       inflight: 1.0.6
@@ -2450,6 +2451,7 @@ packages:
 
   /inflight/1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
@@ -4574,8 +4576,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  github.com/beansmile/node-deploy/4ef1532b6d576337a0560f447c19a85fd8eacab7:
-    resolution: {tarball: https://codeload.github.com/beansmile/node-deploy/tar.gz/4ef1532b6d576337a0560f447c19a85fd8eacab7}
+  github.com/beansmile/node-deploy/8aa0f0699e5e57fd911675795fb5b817f5e5c4f6:
+    resolution: {tarball: https://codeload.github.com/beansmile/node-deploy/tar.gz/8aa0f0699e5e57fd911675795fb5b817f5e5c4f6}
     name: node-deploy
     version: 1.0.0
     dependencies:

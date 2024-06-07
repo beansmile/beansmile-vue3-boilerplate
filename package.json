@@ -37,7 +37,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
     "minimist": "^1.2.8",
-    "node-deploy": "git+https://github.com/beansmile/node-deploy.git",
+    "node-deploy": "git+https://git@github.com/beansmile/node-deploy.git",
     "only-allow": "^1.1.1",
     "postcss-html": "^1.5.0",
     "postcss-px-to-viewport-8-plugin": "^1.2.2",
