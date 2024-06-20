@@ -15,22 +15,22 @@ export interface LoadingInstance {
 let instance: LoadingInstance;
 
 interface Options {
-  value?: number;
-  max?: number;
-  visible?: boolean;
+  currentLoadingCount?: number;
+  maxLoadingCount?: number;
   showMask?: boolean;
 }
 
 export default function createLoadingComponent(options: Options = {}) {
   if (instance) {
-    Object.assign(instance.data, { visible: true }, options);
+    // 如果一次请求多个接口, 只要有一个请求 showMask 为 true, 则显示遮罩
+    const showMask = (instance.data.currentLoadingCount > 0 && instance.data.showMask) ? true : options.showMask;
+    Object.assign(instance.data, options, { showMask });
     return instance;
   }
   const data = reactive<IProps>({
-    value: 1,
-    max: 2,
-    visible: true,
-    delayed: 600,
+    currentLoadingCount: 0,
+    maxLoadingCount: 0,
+    delayed: 300,
     ...options,
   });
 

@@ -1,39 +1,72 @@
 <script lang="ts" setup>
-import { getCurrentInstance, ref, watchEffect } from 'vue';
+import { getCurrentInstance, onUnmounted, ref, watch } from 'vue';
 
 export interface IProps {
-  value: number;
-  max: number;
-  visible?: boolean;
+  currentLoadingCount: number; // 当前loading的数量
+  maxLoadingCount: number; // 此次请求过程中，最大的loading数量
   showMask?: boolean;
-  delayed?: number; // 最少loading的时间，可以防止加载太快，loading 闪烁问题
+  minLoadingTime?: number; // 最少loading的时间，可以防止加载太快，loading 闪烁问题。
+  delayed?: number; // 延迟关闭loading的时间，防止进度条关闭太快，看不到进度条完成效果。
 }
 
 const props = withDefaults(
   defineProps<IProps>(),
   {
-    value: 1,
-    max: 1,
-    visible: false,
     showMask: true,
-    delayed: 0,
+    minLoadingTime: 300,
+    delayed: 200,
   },
 );
 
+// 通过最小loading时间，计算出来的最小loading状态
+const minLoading = ref(false);
+watch(() => props.currentLoadingCount, (value, old) => {
+  if (Boolean(value) !== Boolean(old) && value > 0) {
+    minLoading.value = true;
+    setTimeout(() => {
+      minLoading.value = false;
+    }, props.minLoadingTime);
+  }
+}, { immediate: true });
+
+// 是否显示loading
 const localVisible = ref(false);
-
 let timer: number;
-
-watchEffect(() => {
-  const value = props.visible;
+watch(() => [props.currentLoadingCount, minLoading, props.delayed], () => {
+  const visible = props.currentLoadingCount > 0;
   clearTimeout(timer);
-  if (props.delayed && !value) {
+  if (props.delayed && !minLoading.value && !visible) {
     timer = window.setTimeout(() => {
-      localVisible.value = value;
+      localVisible.value = visible;
     }, props.delayed);
   } else {
-    localVisible.value = value;
+    localVisible.value = visible;
   }
+});
+
+// 计算进度条的百分比
+const percentage = ref(0);
+let percentageTimer: number;
+watch(() => [props.maxLoadingCount, props.currentLoadingCount], () => {
+  clearInterval(percentageTimer);
+  if (props.maxLoadingCount === 0) {
+    percentage.value = 100;
+  } else {
+    percentage.value = (props.maxLoadingCount - props.currentLoadingCount) / props.maxLoadingCount * 100;
+    // 简单做个假进度条加载效果
+    percentageTimer = window.setInterval(() => {
+      if (percentage.value >= 95) {
+        clearInterval(percentageTimer);
+      } else {
+        percentage.value = Math.min(percentage.value + 10, 95);
+      }
+    }, 150);
+  }
+});
+
+onUnmounted(() => {
+  clearInterval(percentageTimer);
+  clearTimeout(timer);
 });
 
 defineExpose({
@@ -42,10 +75,10 @@ defineExpose({
 </script>
 
 <template>
-  <div v-show="visible">
+  <div v-show="localVisible">
     <!-- TODO: 自行显示全局loading样式 -->
     <div style="display: none;">
-      加载中：{{ props.value / props.max * 100 }}%
+      加载中：{{ percentage }}%
     </div>
     <div v-show="props.showMask" class="mask"></div>
   </div>
@@ -54,7 +87,7 @@ defineExpose({
 <style lang="scss" scoped>
   .progress {
     position: fixed;
-    z-index: z("loading", "animation");
+    z-index: 999;
     top: 0;
     left: 0;
     width: 100%;
@@ -62,20 +95,12 @@ defineExpose({
 
   .mask {
     position: fixed;
-    z-index: z("loading", "mask");
+    z-index: 998;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(255, 255, 255, 50%);
     cursor: wait;
-  }
-
-  .loading {
-    position: fixed;
-    z-index: z("loading", "mask");
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 </style>

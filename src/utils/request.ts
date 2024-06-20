@@ -116,8 +116,8 @@ function handleLoadingStart(config: InternalAxiosRequestConfig) {
   loadingSet.add(config);
   loadingData.maxCount++;
   loadingData.loadingInstance = createLoadingComponent({
-    value: loadingSet.size,
-    max: loadingData.maxCount + 1,
+    currentLoadingCount: loadingSet.size,
+    maxLoadingCount: loadingData.maxCount,
     showMask,
   });
 }
@@ -130,11 +130,11 @@ function handleLoadingStop(config: InternalAxiosRequestConfig) {
   const { loadingSet } = loadingData;
   if (loadingSet.has(config)) {
     loadingSet.delete(config);
-    (loadingData.loadingInstance as LoadingInstance).data.value = loadingData.maxCount - loadingSet.size + 1;
+    (loadingData.loadingInstance as LoadingInstance).data.currentLoadingCount = loadingSet.size;
   }
   if (loadingSet.size === 0) {
-    (loadingData.loadingInstance as LoadingInstance).data.visible = false;
     loadingData.maxCount = 0;
+    (loadingData.loadingInstance as LoadingInstance).data.maxLoadingCount = 0;
   }
 }
 
