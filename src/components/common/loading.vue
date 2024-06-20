@@ -20,19 +20,21 @@ const props = withDefaults(
 
 // 通过最小loading时间，计算出来的最小loading状态
 const minLoading = ref(false);
+let minLoadingTimer: number;
 watch(() => props.currentLoadingCount, (value, old) => {
   if (Boolean(value) !== Boolean(old) && value > 0) {
+    clearTimeout(minLoadingTimer);
     minLoading.value = true;
-    setTimeout(() => {
+    minLoadingTimer = window.setTimeout(() => {
       minLoading.value = false;
     }, props.minLoadingTime);
   }
-}, { immediate: true });
+}, { immediate: true, deep: true });
 
 // 是否显示loading
 const localVisible = ref(false);
 let timer: number;
-watch(() => [props.currentLoadingCount, minLoading, props.delayed], () => {
+watch(() => [props.currentLoadingCount, minLoading.value, props.delayed], () => {
   const visible = props.currentLoadingCount > 0;
   clearTimeout(timer);
   if (props.delayed && !minLoading.value && !visible) {
@@ -40,9 +42,9 @@ watch(() => [props.currentLoadingCount, minLoading, props.delayed], () => {
       localVisible.value = visible;
     }, props.delayed);
   } else {
-    localVisible.value = visible;
+    localVisible.value = true;
   }
-});
+}, { immediate: true, deep: true });
 
 // 计算进度条的百分比
 const percentage = ref(0);
@@ -62,11 +64,12 @@ watch(() => [props.maxLoadingCount, props.currentLoadingCount], () => {
       }
     }, 150);
   }
-});
+}, { immediate: true, deep: true });
 
 onUnmounted(() => {
   clearInterval(percentageTimer);
   clearTimeout(timer);
+  clearTimeout(minLoadingTimer);
 });
 
 defineExpose({
