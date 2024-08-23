@@ -1,6 +1,6 @@
 export default function decoder(text: string) {
-  if (/^(\d+|\d*\.\d+)$/.test(text)) {
-    const num = parseFloat(text);
+  if (/^(?:\d+|\d*\.\d+)$/.test(text)) {
+    const num = Number.parseFloat(text);
     return num.toString() === text ? num : text;
   }
   const keywords: any = { true: true, false: false, null: null, undefined };

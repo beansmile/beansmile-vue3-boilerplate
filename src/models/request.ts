@@ -23,7 +23,7 @@ export type SupportedHTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
  * 接口返回的错误提示状态码, 后续可以根据需要添加
  *
  * 40101: 账号已被冻结
- * */
+ */
 type ApiErrorCode = 40101;
 /** 接口返回的错误提示数据 */
 export interface ApiErrorData {
