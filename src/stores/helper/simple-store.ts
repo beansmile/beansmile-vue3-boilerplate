@@ -109,9 +109,13 @@ export function defineSimpleStore<Id extends string, T, SS>(name: Id, getDefault
   });
 }
 
-export function useCheckStore(name: string, fn: Function) {
+export function useCheckStore<T extends (...args: any) => any>(name: string, fn: T) {
   const error = new Error(name);
-  Error.captureStackTrace && Error.captureStackTrace(error, fn);
+  // @ts-expect-error ts误报
+  if (Error.captureStackTrace) {
+    // @ts-expect-error ts误报
+    Error.captureStackTrace(error, fn);
+  }
 
   return function (store: object, newStore: object) {
     let errorMes = '';

@@ -1,25 +1,32 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "jsx": "preserve",
+    "lib": ["ESNext", "DOM"],
     "useDefineForClassFields": true,
+    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "strict": true,
-    "jsx": "preserve",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true,
-    "noEmit": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "sourceRoot": "/",
-    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "types": ["vite/client"],
+    "strict": true,
+    "inlineSources": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "sourceRoot": "/",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
-  "include": ["./*.d.ts", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "include": [
+    "./*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
 }

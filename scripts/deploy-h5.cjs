@@ -1,4 +1,5 @@
-const path = require('path');
+const path = require('node:path');
+const process = require('node:process');
 const NodeSSH = require('node-deploy');
 const dayjs = require('dayjs');
 const { loadEnv } = require('vite');

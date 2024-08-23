@@ -5,7 +5,7 @@ module.exports = {
   rules: {
     'color-function-notation': 'legacy',
     'selector-pseudo-class-no-unknown': [true, {
-      ignorePseudoClasses: ['deep']
+      ignorePseudoClasses: ['deep'],
     }],
     'color-no-invalid-hex': true,
     'font-family-no-duplicate-names': true,
@@ -13,7 +13,7 @@ module.exports = {
     'function-calc-no-unspaced-operator': true,
     'string-no-newline': true,
     'selector-type-no-unknown': [true, {
-      ignoreTypes: [ 'page' ]
+      ignoreTypes: ['page'],
     }],
     'declaration-block-no-duplicate-properties': true,
     'comment-no-empty': true,
@@ -34,7 +34,7 @@ module.exports = {
     'at-rule-empty-line-before': ['always', {
       ignore: ['after-comment'],
       except: ['first-nested'],
-      ignoreAtRules: ['import']
+      ignoreAtRules: ['import'],
     }],
     'selector-list-comma-space-after': 'always-single-line',
     'selector-list-comma-space-before': 'never',
@@ -42,7 +42,7 @@ module.exports = {
     'block-opening-brace-space-before': 'always',
     'rule-empty-line-before': ['always', {
       except: ['first-nested'],
-      ignore: ['after-comment']
+      ignore: ['after-comment'],
     }],
     'declaration-colon-space-after': 'always',
     'declaration-colon-space-before': 'never',
@@ -53,7 +53,7 @@ module.exports = {
     'block-no-empty': true,
     'order/order': [
       'custom-properties',
-      'declarations'
+      'declarations',
     ],
     'order/properties-order': [
       'position',
@@ -307,7 +307,7 @@ module.exports = {
       'page-break-before',
       'page-break-after',
       'page-break-inside',
-      'widows'
-    ]
-  }
+      'widows',
+    ],
+  },
 };
